@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumSafe – Post-Quantum Blockchain Defense</title>
+    <meta name="description" content="A quantum-resistant protocol to safeguard blockchain assets from post-quantum threats.">
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body style="background: #0e0e0e; color: #f2f2f2; font-family: 'Inter', sans-serif;">
+    <!-- Hero Section -->
+    <section class="container-fluid py-5 text-center" style="background: linear-gradient(120deg, #0e0e0e 60%, #00e0ff22 100%);">
+        <img src="https://img.icons8.com/ios-filled/100/00e0ff/shield.png" alt="QuantumSafe Logo" style="width:70px;">
+        <h1 class="display-4 fw-bold mt-3" style="color:#00e0ff;">QuantumSafe</h1>
+        <p class="lead mb-4">A quantum-resistant protocol to safeguard blockchain assets from post-quantum threats.</p>
+        <a href="#secure-assets" class="btn btn-info btn-lg fw-bold px-5">Start Securing Now</a>
+    </section>
+
+    <!-- Why QuantumSafe Section -->
+    <section class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <h2 class="fw-bold" style="color:#00e0ff;">Why QuantumSafe?</h2>
+                <ul class="list-group list-group-flush fs-5">
+                    <li class="list-group-item bg-transparent text-light border-0">🧬 Quantum encryption for smart contracts</li>
+                    <li class="list-group-item bg-transparent text-light border-0">🛡️ Defense-as-a-Service for apps, wallets, and assets</li>
+                    <li class="list-group-item bg-transparent text-light border-0">🔍 Real-time quantum threat monitoring</li>
+                    <li class="list-group-item bg-transparent text-light border-0">📈 Auditable proof of defense</li>
+                </ul>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="https://img.icons8.com/ios-filled/200/00e0ff/lock-2.png" alt="Quantum Security" style="max-width: 220px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container py-5">
+        <h2 class="fw-bold text-center mb-4" style="color:#00e0ff;">Key Features</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card h-100 bg-dark text-light border-info">
+                    <div class="card-body text-center">
+                        <div class="mb-3"><span class="fs-1">🔐</span></div>
+                        <h5 class="card-title">Quantum Encryption</h5>
+                        <p class="card-text">Protect smart contracts with next-gen quantum cryptography.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 bg-dark text-light border-info">
+                    <div class="card-body text-center">
+                        <div class="mb-3"><span class="fs-1">🛡️</span></div>
+                        <h5 class="card-title">Defense-as-a-Service</h5>
+                        <p class="card-text">Integrate security into apps, wallets, and assets easily.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 bg-dark text-light border-info">
+                    <div class="card-body text-center">
+                        <div class="mb-3"><span class="fs-1">📡</span></div>
+                        <h5 class="card-title">Threat Monitoring</h5>
+                        <p class="card-text">Simulate, secure, and monitor quantum threats in real time.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 bg-dark text-light border-info">
+                    <div class="card-body text-center">
+                        <div class="mb-3"><span class="fs-1">📜</span></div>
+                        <h5 class="card-title">Auditable Proof</h5>
+                        <p class="card-text">Get verifiable and transparent proof of quantum defense.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Secure Asset Form Section (Supabase Integration) -->
+    <section id="secure-assets" class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card shadow-lg border-info bg-dark text-light">
+                    <div class="card-body">
+                        <h2 class="fw-bold mb-3" style="color:#00e0ff;">🛡️ Secure Your Asset or Project</h2>
+                        <div class="alert alert-info" style="font-size:1rem;">
+                            <b>How to use:</b><br>
+                            1. Select the network you want to secure your asset on.<br>
+                            2. Enter your wallet address, smart contract, or project name.<br>
+                            3. Transfer the required amount to the displayed payment address.<br>
+                            4. After payment, enter the transaction hash, click "I've Paid", then "Submit for Scan".<br>
+                            5. You will see a confirmation message and your request will be processed.
+                        </div>
+                        <form id="supabase-form" autocomplete="off" class="mb-3">
+                            <div class="mb-3">
+                                <label class="form-label">Network</label>
+                                <select id="network" class="form-select">
+                                    <option value="Solana">Solana</option>
+                                    <option value="Ethereum">Ethereum</option>
+                                    <option value="SUI">SUI</option>
+                                    <option value="Bitcoin">Bitcoin</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Asset / Smart Contract / Project</label>
+                                <input type="text" id="asset-input" class="form-control" placeholder="Paste your asset details here" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Payment Address (<span id="pay-network">Solana</span>)</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="p-2 bg-secondary rounded text-break" id="payment-address" style="user-select:all;">
+                                        24YRQbK4A6TrcBSmvm92iZK6KJ8X3qiEoSoYEwHp8EL2
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-info" id="copy-address">Copy</button>
+                                    <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=24YRQbK4A6TrcBSmvm92iZK6KJ8X3qiEoSoYEwHp8EL2" alt="QR" style="margin-left:8px;">
+                                </div>
+                                <div class="mt-2 text-info">Amount: <span id="pay-amount">0.5 SOL</span></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Transaction Hash (after payment)</label>
+                                <input type="text" id="tx-hash" class="form-control" placeholder="Enter the transaction hash" required>
+                            </div>
+                            <div class="d-flex gap-2 mb-3">
+                                <button type="button" id="paid-btn" class="btn btn-warning text-white fw-bold">I've Paid</button>
+                                <button type="submit" class="btn btn-info fw-bold">Submit for Scan</button>
+                            </div>
+                        </form>
+                        <div id="secure-result" class="mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results & Analytics Section -->
+    <section id="results" class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card shadow border-info bg-dark text-light">
+                    <div class="card-body">
+                        <h2 class="fw-bold mb-3" style="color:#00e0ff;">📈 Results & Analytics</h2>
+                        <div class="alert alert-info" style="font-size:1rem;">
+                            <b>How to use:</b> After submitting your data and payment, your request status and scan results will appear here when available.
+                        </div>
+                        <div id="results-info" class="mb-4">
+                            <p>Enter your asset or project above to see quantum risk analysis and protection status.</p>
+                        </div>
+                        <canvas id="riskChart" width="320" height="320"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Referral Campaign Section -->
+    <section id="referrals" class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card shadow border-info bg-dark text-light">
+                    <div class="card-body text-center">
+                        <h2 class="fw-bold mb-3" style="color:#00e0ff;">🎯 Referral Campaign</h2>
+                        <div class="alert alert-info" style="font-size:1rem;">
+                            <b>How to use:</b> Share QuantumSafe on Twitter using the buttons below and earn points for $QSAFE rewards.
+                        </div>
+                        <div class="d-flex flex-wrap justify-content-center gap-3">
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="Just discovered @QuantumSafeAi — a project securing crypto from quantum attacks. Join the airdrop! #QuantumSafe #Crypto">Tweet #1</button>
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="Imagine your Bitcoin is exposed to quantum hacks. @QuantumSafeAi is the answer. $QSAFE incoming!">Tweet #2</button>
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="🔐 Post-quantum crypto security is no longer optional. I'm in with @QuantumSafeAi – join now.">Tweet #3</button>
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="🚨 Quantum threats are real. @QuantumSafeAi protects your smart contracts from the future.">Tweet #4</button>
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="I'm earning $QSAFE just for sharing this. Get in before the presale ends. #Airdrop #QuantumSafe">Tweet #5</button>
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="Can your wallet survive a quantum attack? Secure it with @QuantumSafeAi today.">Tweet #6</button>
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="Smart projects are adopting post-quantum security. Follow @QuantumSafeAi & stay safe.">Tweet #7</button>
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="🧠 $QSAFE is more than a token – it's a protection protocol. Get your airdrop now.">Tweet #8</button>
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="🔐 One click and you help decentralize quantum security. Follow @QuantumSafeAi">Tweet #9</button>
+                            <button class="btn btn-outline-info tweet-btn" data-tweet="Decentralized + Quantum-Safe = Future. I'm backing @QuantumSafeAi — You?">Tweet #10</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tokenomics Section -->
+    <section id="tokenomics" class="container py-5">
+        <h2 class="fw-bold text-center mb-4" style="color:#00e0ff;">📊 Token Distribution</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card shadow border-info bg-dark text-light">
+                    <div class="card-body">
+                        <canvas id="tokenomicsChart" width="320" height="320"></canvas>
+                        <ul class="list-group list-group-flush mt-4">
+                            <li class="list-group-item bg-transparent text-light border-0">Community Rewards – 20%</li>
+                            <li class="list-group-item bg-transparent text-light border-0">Team – 8%</li>
+                            <li class="list-group-item bg-transparent text-light border-0">Marketing – 12%</li>
+                            <li class="list-group-item bg-transparent text-light border-0">Early Investors – 15%</li>
+                            <li class="list-group-item bg-transparent text-light border-0">Development – 15%</li>
+                            <li class="list-group-item bg-transparent text-light border-0">Liquidity Pool – 20%</li>
+                            <li class="list-group-item bg-transparent text-light border-0">Presale – 13%</li>
+                            <li class="list-group-item bg-transparent text-light border-0">Developer Grants – 7%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="container py-5">
+        <h2 class="fw-bold text-center mb-4" style="color:#00e0ff;">🗺️ Roadmap</h2>
+        <div class="timeline">
+            <div class="timeline-item"><span class="timeline-dot"></span><b>Q2 2025:</b> Research, tokenomics design, website launch</div>
+            <div class="timeline-item"><span class="timeline-dot"></span><b>Q3 2025:</b> Quantum risk scanner MVP, referral campaign</div>
+            <div class="timeline-item"><span class="timeline-dot"></span><b>Q4 2025:</b> Token launch (QSAFE), liquidity & airdrop</div>
+            <div class="timeline-item"><span class="timeline-dot"></span><b>Q1 2026:</b> Full dashboard, developer grants, integrations</div>
+            <div class="timeline-item"><span class="timeline-dot"></span><b>Q2 2026:</b> Governance, DAO voting, advanced tooling</div>
+        </div>
+    </section>
+
+    <!-- Subscribe Section -->
+    <section id="subscribe" class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow border-info bg-dark text-light">
+                    <div class="card-body text-center">
+                        <h2 class="fw-bold mb-3" style="color:#00e0ff;">📬 Stay Updated</h2>
+                        <div class="alert alert-info" style="font-size:1rem;">
+                            <b>How to use:</b> Enter your email to receive all updates and exclusive offers from QuantumSafe.
+                        </div>
+                        <form>
+                            <input type="email" class="form-control mb-3" placeholder="Enter your email" required>
+                            <button type="submit" class="btn btn-info fw-bold px-4">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-4" style="background:#181818;">
+        <p class="mb-0">© 2025 QuantumSafe Protocol. All rights reserved. | <a href="https://twitter.com/QuantumSafeAi" target="_blank" style="color:#00e0ff;">@QuantumSafeAi</a></p>
+    </footer>
+
+    <script>
+    // Supabase setup
+    const supabaseUrl = "https://dljtgacjflzmdpntanww.supabase.co";
+    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsanRnYWNqZmx6bWRwbnRhbnd3Iiwicm9zZSI6ImFub24iLCJpYXQiOjE3NDg2NjAxMTcsImV4cCI6MjA2NDIzNjExN30.SwK4ITWu2fWXJ53sd005nVGeTY4KnuS6B5lKyHckmwE";
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+    // Payment addresses
+    const walletAddresses = {
+        Solana: "24YRQbK4A6TrcBSmvm92iZK6KJ8X3qiEoSoYEwHp8EL2",
+        Ethereum: "0xE4A671f105E9e54eC45Bf9217a9e8050cBD92108",
+        SUI: "0xaa5402dbb7bb02986fce47dcce033a3eb8047db97b0107dc21bdb10358a5b92e",
+        Bitcoin: "bc1qe552eydkjy0vz0ln068mkmg9uhmwn3g9p0p875"
+    };
+
+    // Payment amounts
+    const payAmounts = {
+        Solana: "0.5 SOL",
+        Ethereum: "0.01 ETH",
+        SUI: "10 SUI",
+        Bitcoin: "0.0005 BTC"
+    };
+
+    let paid = false;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Network change updates payment address, QR, and amount
+        const networkSelect = document.getElementById('network');
+        const paymentAddressDiv = document.getElementById('payment-address');
+        const payNetworkSpan = document.getElementById('pay-network');
+        const qrCodeImg = document.getElementById('qr-code');
+        const payAmountSpan = document.getElementById('pay-amount');
+        networkSelect.addEventListener('change', function() {
+            paymentAddressDiv.textContent = walletAddresses[this.value];
+            payNetworkSpan.textContent = this.value;
+            qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${walletAddresses[this.value]}`;
+            payAmountSpan.textContent = payAmounts[this.value];
+        });
+
+        // Copy address button
+        document.getElementById('copy-address').onclick = function() {
+            navigator.clipboard.writeText(paymentAddressDiv.textContent);
+            this.textContent = "Copied!";
+            setTimeout(() => { this.textContent = "Copy"; }, 1200);
+        };
+
+        // Paid button
+        document.getElementById('paid-btn').onclick = function() {
+            paid = true;
+            this.classList.remove('btn-warning');
+            this.classList.add('btn-success');
+            this.textContent = "Payment Confirmed";
+        };
+
+        // Supabase form submission
+        document.getElementById('supabase-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const asset = document.getElementById('asset-input').value.trim();
+            const network = document.getElementById('network').value;
+            const txHash = document.getElementById('tx-hash').value.trim();
+            const secureResult = document.getElementById('secure-result');
+            if (!paid) {
+                secureResult.innerHTML = `<span style="color:orange;">Please complete payment first.</span>`;
+                return;
+            }
+            // Save to Supabase
+            const { data, error } = await supabase
+                .from("quantum_inputs")
+                .insert([{ user_input: asset, network, tx_hash: txHash }]);
+            if (error) {
+                secureResult.innerHTML = `<span style="color:red;">Error saving data. Please try again.</span>`;
+                return;
+            }
+            secureResult.innerHTML = `<span style="color:#00e0ff;">Asset successfully submitted for quantum protection scan.</span>`;
+            // Show fake analysis result for demo
+            document.getElementById('results-info').innerHTML = `
+                <b>Asset/Project:</b> ${asset}<br>
+                <b>Network:</b> ${network}<br>
+                <b>Status:</b> <span style="color:#00e0ff;">Pending Analysis</span>
+            `;
+            renderRiskChart([60, 30, 10]);
+            this.reset();
+            paid = false;
+            document.getElementById('paid-btn').classList.remove('btn-success');
+            document.getElementById('paid-btn').classList.add('btn-warning');
+            document.getElementById('paid-btn').textContent = "I've Paid";
+        };
+
+        // Tweet buttons dynamic interaction
+        document.querySelectorAll('.tweet-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tweetText = encodeURIComponent(this.getAttribute('data-tweet'));
+                const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
+                window.open(tweetUrl, '_blank');
+            });
+        });
+
+        // Results chart
+        let riskChart;
+        window.renderRiskChart = function(data, labels) {
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            if (riskChart) riskChart.destroy();
+            riskChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels || ['Quantum Safe', 'Potential Risk', 'High Risk'],
+                    datasets: [{
+                        data: data || [60, 30, 10],
+                        backgroundColor: ['#00e0ff', '#ffb300', '#ff3b3b'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+        renderRiskChart();
+
+        // Tokenomics chart
+        const tokenomicsCtx = document.getElementById('tokenomicsChart')?.getContext('2d');
+        if (tokenomicsCtx) {
+            new Chart(tokenomicsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        'Community Rewards', 'Team', 'Marketing', 'Early Investors',
+                        'Development', 'Liquidity Pool', 'Presale', 'Developer Grants'
+                    ],
+                    datasets: [{
+                        data: [20, 8, 12, 15, 15, 20, 13, 7],
+                        backgroundColor: [
+                            '#00e0ff', '#ffb300', '#ff3b3b', '#00b3cc',
+                            '#7c4dff', '#43e97b', '#ff6f91', '#f9f871'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    });
+    </script>
+    <style>
+    .timeline {
+        border-left: 3px solid #00e0ff;
+        margin-left: 30px;
+        padding-left: 30px;
+        position: relative;
+    }
+    .timeline-item {
+        position: relative;
+        margin-bottom: 24px;
+        font-size: 1.1rem;
+    }
+    .timeline-dot {
+        position: absolute;
+        left: -38px;
+        top: 2px;
+        width: 18px;
+        height: 18px;
+        background: #00e0ff;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        box-shadow: 0 0 0 2px #00e0ff;
+        display: inline-block;
+    }
+    </style>
+</body>
+</html>
