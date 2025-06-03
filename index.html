@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +7,44 @@
     <meta name="description" content="A quantum-resistant protocol to safeguard blockchain assets from post-quantum threats.">
     <link href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
-<body style="background: #0e0e0e; color: #f2f2f2; font-family: 'Inter', sans-serif;">
+<body>
+    <!-- Profile Connect Button at the Top -->
+    <div class="container mt-4">
+        <div class="d-flex justify-content-end align-items-center">
+            <div class="dropdown">
+                <button class="btn btn-info fw-bold dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="me-1">Connect Profile</span>
+                    <span style="font-size:1.2em;">&#x25BC;</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end p-3" style="min-width:320px;">
+                    <div class="mb-2 text-center fw-bold">How to use:</div>
+                    <ol class="mb-2 ps-3" style="font-size:0.97em;">
+                        <li>Enter your Twitter username and wallet address.</li>
+                        <li>Click "Connect Now" to generate your referral link and start earning points.</li>
+                        <li>Your points and tweets will be tracked after connecting.</li>
+                    </ol>
+                    <input type="text" id="twitter-username" class="form-control mb-2" placeholder="Twitter Username">
+                    <input type="text" id="wallet-address" class="form-control mb-2" placeholder="Wallet Address">
+                    <button id="generate-referral" class="btn btn-success w-100 mb-2">Connect Now</button>
+                    <div id="referral-link" class="mb-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reward Stats Section (keep as is, below the top bar) -->
+    <div id="reward-stats" class="alert alert-success text-center my-3" style="display:none;">
+        <b>Your Points:</b> <span id="points-count">0</span> | <b>Tweets:</b> <span id="tweets-count">0</span>
+    </div>
+
     <!-- Hero Section -->
-    <section class="container-fluid py-5 text-center" style="background: linear-gradient(120deg, #0e0e0e 60%, #00e0ff22 100%);">
+    <section class="container-fluid py-5 text-center hero-bg">
         <img src="https://img.icons8.com/ios-filled/100/00e0ff/shield.png" alt="QuantumSafe Logo" style="width:70px;">
-        <h1 class="display-4 fw-bold mt-3" style="color:#00e0ff;">QuantumSafe</h1>
+        <h1 class="display-4 fw-bold mt-3 hero-title">QuantumSafe</h1>
         <p class="lead mb-4">A quantum-resistant protocol to safeguard blockchain assets from post-quantum threats.</p>
         <a href="#secure-assets" class="btn btn-info btn-lg fw-bold px-5">Start Securing Now</a>
     </section>
@@ -24,7 +53,7 @@
     <section class="container py-5">
         <div class="row align-items-center">
             <div class="col-md-6 mb-4 mb-md-0">
-                <h2 class="fw-bold" style="color:#00e0ff;">Why QuantumSafe?</h2>
+                <h2 class="fw-bold why-title">Why QuantumSafe?</h2>
                 <ul class="list-group list-group-flush fs-5">
                     <li class="list-group-item bg-transparent text-light border-0">🧬 Quantum encryption for smart contracts</li>
                     <li class="list-group-item bg-transparent text-light border-0">🛡️ Defense-as-a-Service for apps, wallets, and assets</li>
@@ -40,7 +69,7 @@
 
     <!-- Features Section -->
     <section class="container py-5">
-        <h2 class="fw-bold text-center mb-4" style="color:#00e0ff;">Key Features</h2>
+        <h2 class="fw-bold text-center mb-4 features-title">Key Features</h2>
         <div class="row g-4">
             <div class="col-md-3">
                 <div class="card h-100 bg-dark text-light border-info">
@@ -81,7 +110,7 @@
         </div>
     </section>
 
-    <!-- Secure Asset Form Section (Supabase Integration) -->
+    <!-- Secure Asset Form Section -->
     <section id="secure-assets" class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-7">
@@ -246,180 +275,9 @@
         <p class="mb-0">© 2025 QuantumSafe Protocol. All rights reserved. | <a href="https://twitter.com/QuantumSafeAi" target="_blank" style="color:#00e0ff;">@QuantumSafeAi</a></p>
     </footer>
 
-    <script>
-    // Supabase setup
-    const supabaseUrl = "https://dljtgacjflzmdpntanww.supabase.co";
-    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsanRnYWNqZmx6bWRwbnRhbnd3Iiwicm9zZSI6ImFub24iLCJpYXQiOjE3NDg2NjAxMTcsImV4cCI6MjA2NDIzNjExN30.SwK4ITWu2fWXJ53sd005nVGeTY4KnuS6B5lKyHckmwE";
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-
-    // Payment addresses
-    const walletAddresses = {
-        Solana: "24YRQbK4A6TrcBSmvm92iZK6KJ8X3qiEoSoYEwHp8EL2",
-        Ethereum: "0xE4A671f105E9e54eC45Bf9217a9e8050cBD92108",
-        SUI: "0xaa5402dbb7bb02986fce47dcce033a3eb8047db97b0107dc21bdb10358a5b92e",
-        Bitcoin: "bc1qe552eydkjy0vz0ln068mkmg9uhmwn3g9p0p875"
-    };
-
-    // Payment amounts
-    const payAmounts = {
-        Solana: "0.5 SOL",
-        Ethereum: "0.01 ETH",
-        SUI: "10 SUI",
-        Bitcoin: "0.0005 BTC"
-    };
-
-    let paid = false;
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Network change updates payment address, QR, and amount
-        const networkSelect = document.getElementById('network');
-        const paymentAddressDiv = document.getElementById('payment-address');
-        const payNetworkSpan = document.getElementById('pay-network');
-        const qrCodeImg = document.getElementById('qr-code');
-        const payAmountSpan = document.getElementById('pay-amount');
-        networkSelect.addEventListener('change', function() {
-            paymentAddressDiv.textContent = walletAddresses[this.value];
-            payNetworkSpan.textContent = this.value;
-            qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${walletAddresses[this.value]}`;
-            payAmountSpan.textContent = payAmounts[this.value];
-        });
-
-        // Copy address button
-        document.getElementById('copy-address').onclick = function() {
-            navigator.clipboard.writeText(paymentAddressDiv.textContent);
-            this.textContent = "Copied!";
-            setTimeout(() => { this.textContent = "Copy"; }, 1200);
-        };
-
-        // Paid button
-        document.getElementById('paid-btn').onclick = function() {
-            paid = true;
-            this.classList.remove('btn-warning');
-            this.classList.add('btn-success');
-            this.textContent = "Payment Confirmed";
-        };
-
-        // Supabase form submission
-        document.getElementById('supabase-form').onsubmit = async function(e) {
-            e.preventDefault();
-            const asset = document.getElementById('asset-input').value.trim();
-            const network = document.getElementById('network').value;
-            const txHash = document.getElementById('tx-hash').value.trim();
-            const secureResult = document.getElementById('secure-result');
-            if (!paid) {
-                secureResult.innerHTML = `<span style="color:orange;">Please complete payment first.</span>`;
-                return;
-            }
-            // Save to Supabase
-            const { data, error } = await supabase
-                .from("quantum_inputs")
-                .insert([{ user_input: asset, network, tx_hash: txHash }]);
-            if (error) {
-                secureResult.innerHTML = `<span style="color:red;">Error saving data. Please try again.</span>`;
-                return;
-            }
-            secureResult.innerHTML = `<span style="color:#00e0ff;">Asset successfully submitted for quantum protection scan.</span>`;
-            // Show fake analysis result for demo
-            document.getElementById('results-info').innerHTML = `
-                <b>Asset/Project:</b> ${asset}<br>
-                <b>Network:</b> ${network}<br>
-                <b>Status:</b> <span style="color:#00e0ff;">Pending Analysis</span>
-            `;
-            renderRiskChart([60, 30, 10]);
-            this.reset();
-            paid = false;
-            document.getElementById('paid-btn').classList.remove('btn-success');
-            document.getElementById('paid-btn').classList.add('btn-warning');
-            document.getElementById('paid-btn').textContent = "I've Paid";
-        };
-
-        // Tweet buttons dynamic interaction
-        document.querySelectorAll('.tweet-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const tweetText = encodeURIComponent(this.getAttribute('data-tweet'));
-                const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
-                window.open(tweetUrl, '_blank');
-            });
-        });
-
-        // Results chart
-        let riskChart;
-        window.renderRiskChart = function(data, labels) {
-            const ctx = document.getElementById('riskChart').getContext('2d');
-            if (riskChart) riskChart.destroy();
-            riskChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels || ['Quantum Safe', 'Potential Risk', 'High Risk'],
-                    datasets: [{
-                        data: data || [60, 30, 10],
-                        backgroundColor: ['#00e0ff', '#ffb300', '#ff3b3b'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
-                }
-            });
-        }
-        renderRiskChart();
-
-        // Tokenomics chart
-        const tokenomicsCtx = document.getElementById('tokenomicsChart')?.getContext('2d');
-        if (tokenomicsCtx) {
-            new Chart(tokenomicsCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: [
-                        'Community Rewards', 'Team', 'Marketing', 'Early Investors',
-                        'Development', 'Liquidity Pool', 'Presale', 'Developer Grants'
-                    ],
-                    datasets: [{
-                        data: [20, 8, 12, 15, 15, 20, 13, 7],
-                        backgroundColor: [
-                            '#00e0ff', '#ffb300', '#ff3b3b', '#00b3cc',
-                            '#7c4dff', '#43e97b', '#ff6f91', '#f9f871'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    cutout: '70%',
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
-                }
-            });
-        }
-    });
-    </script>
-    <style>
-    .timeline {
-        border-left: 3px solid #00e0ff;
-        margin-left: 30px;
-        padding-left: 30px;
-        position: relative;
-    }
-    .timeline-item {
-        position: relative;
-        margin-bottom: 24px;
-        font-size: 1.1rem;
-    }
-    .timeline-dot {
-        position: absolute;
-        left: -38px;
-        top: 2px;
-        width: 18px;
-        height: 18px;
-        background: #00e0ff;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 0 0 2px #00e0ff;
-        display: inline-block;
-    }
-    </style>
+    <!-- Scripts -->
+    <script src="js/Js/config.js"></script>
+    <script src="js/Js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

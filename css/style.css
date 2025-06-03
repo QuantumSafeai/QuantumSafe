@@ -1,0 +1,32 @@
+body {
+    background: #0e0e0e;
+    color: #f2f2f2;
+    font-family: 'Inter', sans-serif;
+}
+.hero-bg {
+    background: linear-gradient(120deg, #0e0e0e 60%, #00e0ff22 100%);
+}
+.timeline {
+    border-left: 3px solid #00e0ff;
+    margin-left: 30px;
+    padding-left: 30px;
+    position: relative;
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+    font-size: 1.1rem;
+}
+.timeline-dot {
+    position: absolute;
+    left: -38px;
+    top: 2px;
+    width: 18px;
+    height: 18px;
+    background: #00e0ff;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #00e0ff;
+    display: inline-block;
+}
+/* Add more custom styles as needed */
