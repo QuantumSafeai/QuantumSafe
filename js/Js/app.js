@@ -159,18 +159,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Tweet buttons with reward tracking
+    // Enhanced Tweet Buttons Logic for Referral Campaign
     document.querySelectorAll('.tweet-btn').forEach(btn => {
         btn.addEventListener('click', async function() {
-            const tweetText = encodeURIComponent(this.getAttribute('data-tweet'));
-            const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
+            // Ensure user is connected
+            const userRef = localStorage.getItem('user_ref');
+            if (!userRef || userRef.startsWith('guest_')) {
+                alert("Please connect your profile first to earn points for tweets.");
+                return;
+            }
+
+            // Personalize tweet with referral link
+            const referralLink = `${window.location.origin}/?ref=${userRef}`;
+            let tweetText = this.getAttribute('data-tweet');
+            tweetText += `\n\nJoin QuantumSafe with my link: ${referralLink}`;
+
+            // Prevent rapid repeat tweets (10 min cooldown per button)
+            if (this.dataset.cooldown && Date.now() < Number(this.dataset.cooldown)) {
+                alert("Please wait before tweeting this again.");
+                return;
+            }
+            this.dataset.cooldown = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+            // Open Twitter intent
+            const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
             window.open(tweetUrl, '_blank');
+
             // Save tweet action in Supabase
-            const userRef = getUserRef();
             await supabase.from('referral_rewards').insert([
-                { user_ref: userRef, tweet: this.getAttribute('data-tweet'), timestamp: new Date().toISOString() }
+                { user_ref: userRef, tweet: tweetText, timestamp: new Date().toISOString() }
             ]);
+
+            // UI feedback
+            this.textContent = "Tweeted!";
+            this.disabled = true;
+            setTimeout(() => {
+                this.textContent = "Tweet Again";
+                this.disabled = false;
+            }, 10 * 60 * 1000); // 10 minutes
+
+            // Update stats and notify user
             updateRewardStats();
+            alert("Thank you! Your tweet has been recorded and points added.");
         });
     });
 
