@@ -4,6 +4,26 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let paid = false;
 let riskChart = null;
 
+function renderRiskChart(data) {
+    const ctx = document.getElementById('riskChart')?.getContext('2d');
+    if (!ctx) return;
+    if (riskChart) riskChart.destroy();
+    riskChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Quantum Safe', 'Potential Risk', 'High Risk'],
+            datasets: [{
+                data: data || [60, 30, 10],
+                backgroundColor: ['#00e0ff', '#ffb300', '#ff3b3b'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const networkSelect = document.getElementById('network');
@@ -149,10 +169,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Generate referral link after user signs and verifies Twitter and wallet
-    async function generateReferralLink() {
-        const twitter = twitterInput ? twitterInput.value.trim().replace(/^@/, "") : "";
-        const wallet = walletInput ? walletInput.value.trim() : "";
-        const network = networkSelect ? networkSelect.value : "Solana";
+    function generateReferralLink() {
+        const twitter = twitterInput.value.trim().replace(/^@/, "");
+        const wallet = walletInput.value.trim();
+        const network = networkSelect.value;
 
         if (!isValidTwitter(twitter)) {
             showToast("Please enter a valid Twitter username.");
@@ -164,22 +184,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Save user info in Supabase (optional)
-        await supabase.from('referral_users').upsert([
+        supabase.from('referral_users').upsert([
             { twitter: twitter, wallet: wallet, network: network }
         ]);
 
         // Generate unique referral link
         const refId = encodeURIComponent(`${twitter}_${wallet}_${network}`);
-        const link = `${window.location.origin}/?ref=${refId}`;
-        if (referralLinkDiv) {
-            referralLinkDiv.innerHTML = `<b>Your Referral Link:</b> <a href="${link}" target="_blank">${link}</a>`;
-        }
         localStorage.setItem('user_ref', refId);
         showUserProfile();
         updateRewardStats();
+        showToast("Profile connected successfully!");
     }
-
-    // Add event for referral link generation
     const generateReferralBtn = document.getElementById('generate-referral');
     if (generateReferralBtn) {
         generateReferralBtn.onclick = generateReferralLink;
@@ -261,25 +276,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Dynamic Charts
     let tokenomicsChart, referralChart, secureChart;
-    function renderRiskChart(data) {
-        const ctx = document.getElementById('riskChart')?.getContext('2d');
-        if (!ctx) return;
-        if (riskChart) riskChart.destroy();
-        riskChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Quantum Safe', 'Potential Risk', 'High Risk'],
-                datasets: [{
-                    data: data || [60, 30, 10],
-                    backgroundColor: ['#00e0ff', '#ffb300', '#ff3b3b'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom' } }
-            }
-        });
-    }
     function renderTokenomicsChart() {
         const ctx = document.getElementById('tokenomicsChart')?.getContext('2d');
         if (!ctx) return;
