@@ -317,6 +317,8 @@
         if (generateReferralBtn) {
             generateReferralBtn.onclick = generateReferralLink;
         }
+        if (window.riskChart) window.riskChart.destroy();
+        window.riskChart = new Chart(ctx, { ... });
     </script>
 </body>
 </html>

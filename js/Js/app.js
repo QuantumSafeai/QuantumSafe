@@ -2,6 +2,7 @@
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let paid = false;
+let riskChart = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
@@ -259,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Dynamic Charts
-    let riskChart, tokenomicsChart, referralChart, secureChart;
+    let tokenomicsChart, referralChart, secureChart;
     function renderRiskChart(data) {
         const ctx = document.getElementById('riskChart')?.getContext('2d');
         if (!ctx) return;
@@ -271,7 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     data: data || [60, 30, 10],
                     backgroundColor: ['#00e0ff', '#ffb300', '#ff3b3b'],
-                    borderWidth: 1
                 }]
             },
             options: {
