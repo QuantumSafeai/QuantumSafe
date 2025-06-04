@@ -278,3 +278,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show correct section on load
     showProfileOrStats();
 });
+
+function showToast(msg) {
+    const toastBody = document.getElementById('toast-body');
+    toastBody.textContent = msg;
+    const toast = new bootstrap.Toast(document.getElementById('main-toast'));
+    toast.show();
+}
+
+function showUserProfile() {
+    const userRef = localStorage.getItem('user_ref');
+    if (!userRef || userRef.startsWith('guest_')) {
+        document.getElementById('user-profile').style.display = 'none';
+        return;
+    }
+    const twitter = decodeURIComponent(userRef).split('_')[0];
+    const avatarUrl = `https://unavatar.io/twitter/${twitter}`;
+    document.getElementById('twitter-avatar').src = avatarUrl;
+    document.getElementById('twitter-name').textContent = '@' + twitter;
+    document.getElementById('user-profile').style.display = '';
+}
+
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+    logoutBtn.onclick = function() {
+        localStorage.removeItem('user_ref');
+        location.reload();
+    };
+}
+
+const subscribeForm = document.getElementById('subscribe-form');
+if (subscribeForm) {
+    subscribeForm.onsubmit = async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('subscribe-email').value.trim();
+        if (!email) return;
+        await supabase.from('subscribers').insert([{ email }]);
+        this.reset();
+        showToast("Thank you for subscribing!");
+    };
+}
