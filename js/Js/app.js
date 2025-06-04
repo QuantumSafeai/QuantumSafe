@@ -376,4 +376,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // On load
     showUserProfile();
     updateRewardStats();
+
+    // Chart example
+    const ctx = document.getElementById('riskChart')?.getContext('2d');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Quantum Safe', 'Potential Risk', 'High Risk'],
+                datasets: [{
+                    data: [60, 30, 10],
+                    backgroundColor: ['#00e0ff', '#ffb300', '#ff3b3b'],
+                }]
+            }
+        });
+    }
+
+    // Connect button example
+    const btn = document.getElementById('generate-referral');
+    if (btn) {
+        btn.onclick = function() {
+            alert('Connect logic works!');
+        };
+    }
 });
