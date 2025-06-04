@@ -1,4 +1,4 @@
-// Initialize Supabase client using config.js variables
+// Initialize Supabase client
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let paid = false;
@@ -17,6 +17,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const referralLinkDiv = document.getElementById('referral-link');
     const twitterInput = document.getElementById('twitter-username');
     const walletInput = document.getElementById('wallet-address');
+    const userProfileDiv = document.getElementById('user-profile');
+    const twitterAvatar = document.getElementById('twitter-avatar');
+    const twitterName = document.getElementById('twitter-name');
+    const userPoints = document.getElementById('user-points');
+    const logoutBtn = document.getElementById('logout-btn');
+    const profileConnect = document.getElementById('profile-connect');
+    const rewardStats = document.getElementById('reward-stats');
+    const subscribeForm = document.getElementById('subscribe-form');
+    const subscribeResult = document.getElementById('subscribe-result');
+    const tweetHistoryDiv = document.getElementById('tweet-history');
+    const marketDataDiv = document.getElementById('market-data');
+
+    // Toast notification
+    function showToast(msg) {
+        const toastBody = document.getElementById('toast-body');
+        toastBody.textContent = msg;
+        const toast = new bootstrap.Toast(document.getElementById('main-toast'));
+        toast.show();
+    }
+
+    // Profile logic
+    function showUserProfile() {
+        const userRef = localStorage.getItem('user_ref');
+        if (!userRef || userRef.startsWith('guest_')) {
+            userProfileDiv.style.display = 'none';
+            if (profileConnect) profileConnect.style.display = '';
+            if (rewardStats) rewardStats.style.display = 'none';
+            return;
+        }
+        const twitter = decodeURIComponent(userRef).split('_')[0];
+        const avatarUrl = `https://unavatar.io/twitter/${twitter}`;
+        twitterAvatar.src = avatarUrl;
+        twitterName.textContent = '@' + twitter;
+        userProfileDiv.style.display = '';
+        if (profileConnect) profileConnect.style.display = 'none';
+        if (rewardStats) rewardStats.style.display = '';
+        updateRewardStats();
+    }
+
+    if (logoutBtn) {
+        logoutBtn.onclick = function() {
+            localStorage.removeItem('user_ref');
+            location.reload();
+        };
+    }
 
     // Update payment details when network changes
     if (networkSelect) {
@@ -79,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <b>Status:</b> <span style="color:#00e0ff;">Pending Analysis</span>
             `;
             renderRiskChart([60, 30, 10]);
+            renderSecureChart([Math.random()*100, Math.random()*100, Math.random()*100]);
             this.reset();
             paid = false;
             paidBtn.classList.remove('btn-success');
@@ -108,11 +154,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const network = networkSelect ? networkSelect.value : "Solana";
 
         if (!isValidTwitter(twitter)) {
-            alert("Please enter a valid Twitter username.");
+            showToast("Please enter a valid Twitter username.");
             return;
         }
         if (!isValidWallet(wallet, network)) {
-            alert("Please enter a valid wallet address for " + network + ".");
+            showToast("Please enter a valid wallet address for " + network + ".");
             return;
         }
 
@@ -128,8 +174,8 @@ document.addEventListener('DOMContentLoaded', function() {
             referralLinkDiv.innerHTML = `<b>Your Referral Link:</b> <a href="${link}" target="_blank">${link}</a>`;
         }
         localStorage.setItem('user_ref', refId);
+        showUserProfile();
         updateRewardStats();
-        showProfileOrStats();
     }
 
     // Add event for referral link generation
@@ -138,34 +184,10 @@ document.addEventListener('DOMContentLoaded', function() {
         generateReferralBtn.onclick = generateReferralLink;
     }
 
-    // Show/hide profile connect or stats
-    function showProfileOrStats() {
-        const userRef = localStorage.getItem('user_ref');
-        const rewardStats = document.getElementById('reward-stats');
-        const profileConnect = document.querySelector('.dropdown');
-        if (userRef && !userRef.startsWith('guest_')) {
-            if (rewardStats) rewardStats.style.display = '';
-            if (profileConnect) profileConnect.style.display = 'none';
-            updateRewardStats();
-        } else {
-            if (rewardStats) rewardStats.style.display = 'none';
-            if (profileConnect) profileConnect.style.display = '';
-        }
-    }
-
-    // Helper: Get or set user referral id (localStorage)
-    function getUserRef() {
-        let ref = localStorage.getItem('user_ref');
-        if (!ref) {
-            ref = 'guest_' + Math.random().toString(36).substring(2, 12);
-            localStorage.setItem('user_ref', ref);
-        }
-        return ref;
-    }
-
     // Update reward stats (points and tweets)
     async function updateRewardStats() {
-        const userRef = getUserRef();
+        const userRef = localStorage.getItem('user_ref');
+        if (!userRef) return;
         const { data, error } = await supabase
             .from('referral_rewards')
             .select('*', { count: 'exact' })
@@ -173,64 +195,79 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data) {
             document.getElementById('tweets-count').textContent = data.length;
             document.getElementById('points-count').textContent = data.length * 10; // 10 points per tweet
+            if (userPoints) userPoints.textContent = `${data.length * 10} pts`;
+            renderReferralChart(data.length);
+            renderTweetHistory(data);
         }
+    }
+
+    // Show tweet history
+    function renderTweetHistory(data) {
+        if (!tweetHistoryDiv) return;
+        if (!data || data.length === 0) {
+            tweetHistoryDiv.innerHTML = "<i>No tweets yet.</i>";
+            return;
+        }
+        tweetHistoryDiv.innerHTML = `<b>Your Tweets:</b><ul class="list-group mt-2">${data.map(t => `<li class="list-group-item bg-dark text-light border-info">${t.tweet} <span class="badge bg-secondary float-end">${new Date(t.timestamp).toLocaleString()}</span></li>`).join('')}</ul>`;
     }
 
     // Enhanced Tweet Buttons Logic for Referral Campaign
     document.querySelectorAll('.tweet-btn').forEach(btn => {
         btn.addEventListener('click', async function() {
-            // Ensure user is connected
             const userRef = localStorage.getItem('user_ref');
             if (!userRef || userRef.startsWith('guest_')) {
-                alert("Please connect your profile first to earn points for tweets.");
+                showToast("Please connect your profile first to earn points for tweets.");
                 return;
             }
-
-            // Personalize tweet with referral link
             const referralLink = `${window.location.origin}/?ref=${userRef}`;
             let tweetText = this.getAttribute('data-tweet');
             tweetText += `\n\nJoin QuantumSafe with my link: ${referralLink}`;
-
-            // Prevent rapid repeat tweets (10 min cooldown per button)
             if (this.dataset.cooldown && Date.now() < Number(this.dataset.cooldown)) {
-                alert("Please wait before tweeting this again.");
+                showToast("Please wait before tweeting this again.");
                 return;
             }
             this.dataset.cooldown = Date.now() + 10 * 60 * 1000; // 10 minutes
-
-            // Open Twitter intent
             const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
             window.open(tweetUrl, '_blank');
-
-            // Save tweet action in Supabase
             await supabase.from('referral_rewards').insert([
                 { user_ref: userRef, tweet: tweetText, timestamp: new Date().toISOString() }
             ]);
-
-            // UI feedback
             this.textContent = "Tweeted!";
             this.disabled = true;
             setTimeout(() => {
                 this.textContent = "Tweet Again";
                 this.disabled = false;
-            }, 10 * 60 * 1000); // 10 minutes
-
-            // Update stats and notify user
+            }, 10 * 60 * 1000);
             updateRewardStats();
-            alert("Thank you! Your tweet has been recorded and points added.");
+            showToast("Thank you! Your tweet has been recorded and points added.");
         });
     });
 
-    // Results chart
-    let riskChart;
-    window.renderRiskChart = function(data, labels) {
+    // Subscribe form logic
+    if (subscribeForm) {
+        subscribeForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('subscribe-email').value.trim();
+            if (!email) {
+                subscribeResult.innerHTML = '<span class="text-danger">Please enter a valid email.</span>';
+                return;
+            }
+            await supabase.from('subscribers').insert([{ email }]);
+            this.reset();
+            subscribeResult.innerHTML = '<span class="text-success">Thank you for subscribing!</span>';
+        };
+    }
+
+    // Dynamic Charts
+    let riskChart, tokenomicsChart, referralChart, secureChart;
+    function renderRiskChart(data) {
         const ctx = document.getElementById('riskChart')?.getContext('2d');
         if (!ctx) return;
         if (riskChart) riskChart.destroy();
         riskChart = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: labels || ['Quantum Safe', 'Potential Risk', 'High Risk'],
+                labels: ['Quantum Safe', 'Potential Risk', 'High Risk'],
                 datasets: [{
                     data: data || [60, 30, 10],
                     backgroundColor: ['#00e0ff', '#ffb300', '#ff3b3b'],
@@ -238,19 +275,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 }]
             },
             options: {
-                responsive: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
             }
         });
-    };
-    if (document.getElementById('riskChart')) renderRiskChart();
-
-    // Tokenomics chart
-    const tokenomicsCtx = document.getElementById('tokenomicsChart')?.getContext('2d');
-    if (tokenomicsCtx) {
-        new Chart(tokenomicsCtx, {
+    }
+    function renderTokenomicsChart() {
+        const ctx = document.getElementById('tokenomicsChart')?.getContext('2d');
+        if (!ctx) return;
+        if (tokenomicsChart) tokenomicsChart.destroy();
+        tokenomicsChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
                 labels: [
@@ -268,53 +302,78 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             options: {
                 cutout: '70%',
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
             }
         });
     }
-
-    // Show correct section on load
-    showProfileOrStats();
-});
-
-function showToast(msg) {
-    const toastBody = document.getElementById('toast-body');
-    toastBody.textContent = msg;
-    const toast = new bootstrap.Toast(document.getElementById('main-toast'));
-    toast.show();
-}
-
-function showUserProfile() {
-    const userRef = localStorage.getItem('user_ref');
-    if (!userRef || userRef.startsWith('guest_')) {
-        document.getElementById('user-profile').style.display = 'none';
-        return;
+    function renderReferralChart(tweetCount) {
+        const ctx = document.getElementById('referralChart')?.getContext('2d');
+        if (!ctx) return;
+        if (referralChart) referralChart.destroy();
+        referralChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Your Tweets', 'Goal'],
+                datasets: [{
+                    label: 'Referral Progress',
+                    data: [tweetCount || 0, 10],
+                    backgroundColor: ['#00e0ff', '#ffb300'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, max: 10 } }
+            }
+        });
     }
-    const twitter = decodeURIComponent(userRef).split('_')[0];
-    const avatarUrl = `https://unavatar.io/twitter/${twitter}`;
-    document.getElementById('twitter-avatar').src = avatarUrl;
-    document.getElementById('twitter-name').textContent = '@' + twitter;
-    document.getElementById('user-profile').style.display = '';
-}
+    function renderSecureChart(data) {
+        const ctx = document.getElementById('secureChart')?.getContext('2d');
+        if (!ctx) return;
+        if (secureChart) secureChart.destroy();
+        secureChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Scan 1', 'Scan 2', 'Scan 3'],
+                datasets: [{
+                    label: 'Quantum Risk Score',
+                    data: data || [70, 50, 30],
+                    borderColor: '#00e0ff',
+                    backgroundColor: 'rgba(0,224,255,0.2)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    }
+    renderRiskChart();
+    renderTokenomicsChart();
+    renderReferralChart(0);
+    renderSecureChart();
 
-const logoutBtn = document.getElementById('logout-btn');
-if (logoutBtn) {
-    logoutBtn.onclick = function() {
-        localStorage.removeItem('user_ref');
-        location.reload();
-    };
-}
+    // Live Market Data (CoinGecko)
+    async function fetchMarketData() {
+        if (!marketDataDiv) return;
+        try {
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
+            const data = await res.json();
+            marketDataDiv.innerHTML = `
+                <b>BTC:</b> $${data.bitcoin.usd} &nbsp; 
+                <b>ETH:</b> $${data.ethereum.usd} &nbsp; 
+                <b>SOL:</b> $${data.solana.usd}
+            `;
+        } catch {
+            marketDataDiv.innerHTML = "<span class='text-danger'>Failed to load market data.</span>";
+        }
+    }
+    fetchMarketData();
+    setInterval(fetchMarketData, 60000);
 
-const subscribeForm = document.getElementById('subscribe-form');
-if (subscribeForm) {
-    subscribeForm.onsubmit = async function(e) {
-        e.preventDefault();
-        const email = document.getElementById('subscribe-email').value.trim();
-        if (!email) return;
-        await supabase.from('subscribers').insert([{ email }]);
-        this.reset();
-        showToast("Thank you for subscribing!");
-    };
-}
+    // On load
+    showUserProfile();
+    updateRewardStats();
+});

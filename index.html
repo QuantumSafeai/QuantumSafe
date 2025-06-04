@@ -12,10 +12,16 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-    <!-- Profile Connect Button at the Top -->
+    <!-- Profile Section -->
     <div class="container mt-4">
         <div class="d-flex justify-content-end align-items-center">
-            <div class="dropdown">
+            <div id="user-profile" class="text-end" style="display:none;">
+                <img id="twitter-avatar" src="" alt="Avatar" style="width:36px; border-radius:50%; vertical-align:middle;">
+                <span id="twitter-name" class="fw-bold ms-2"></span>
+                <span id="user-points" class="badge bg-success ms-2"></span>
+                <button id="logout-btn" class="btn btn-sm btn-outline-danger ms-2">Logout</button>
+            </div>
+            <div id="profile-connect" class="dropdown">
                 <button class="btn btn-info fw-bold dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="me-1">Connect Profile</span>
                     <span style="font-size:1.2em;">&#x25BC;</span>
@@ -49,19 +55,30 @@
         <a href="#secure-assets" class="btn btn-info btn-lg fw-bold px-5">Start Securing Now</a>
     </section>
 
-    <!-- Why QuantumSafe Section -->
+    <!-- Quantum Threats & Solutions Section -->
     <section class="container py-5">
-        <div class="row align-items-center">
-            <div class="col-md-6 mb-4 mb-md-0">
-                <h2 class="fw-bold why-title">Why QuantumSafe?</h2>
-                <ul class="list-group list-group-flush fs-5">
-                    <li class="list-group-item bg-transparent text-light border-0">🧬 Quantum encryption for smart contracts</li>
-                    <li class="list-group-item bg-transparent text-light border-0">🛡️ Defense-as-a-Service for apps, wallets, and assets</li>
-                    <li class="list-group-item bg-transparent text-light border-0">🔍 Real-time quantum threat monitoring</li>
-                    <li class="list-group-item bg-transparent text-light border-0">📈 Auditable proof of defense</li>
+        <h2 class="fw-bold text-center mb-4" style="color:#00e0ff;">Quantum Threats & How QuantumSafe Helps</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Quantum Computing Attacks</h4>
+                <ul>
+                    <li><b>Shor's Algorithm:</b> Can break RSA/ECDSA, exposing wallets and contracts.</li>
+                    <li><b>Grover's Algorithm:</b> Weakens symmetric encryption, making brute-force easier.</li>
+                    <li><b>Harvest Now, Decrypt Later:</b> Hackers can steal encrypted data now and decrypt it when quantum computers are ready.</li>
+                </ul>
+                <h5 class="mt-4">How QuantumSafe Protects:</h5>
+                <ul>
+                    <li>Post-quantum cryptography for smart contracts and wallets.</li>
+                    <li>Real-time quantum threat monitoring and alerts.</li>
+                    <li>Auditable proof of quantum defense for your assets.</li>
+                    <li>Easy integration for teams, communities, and DEXs.</li>
                 </ul>
             </div>
-            <div class="col-md-6 text-center">
+            <div class="col-md-6">
+                <div class="alert alert-warning">
+                    <b>Why care?</b> <br>
+                    Quantum computers will soon be able to break today's blockchain security. Projects that don't upgrade will be at risk of total loss.
+                </div>
                 <img src="https://img.icons8.com/ios-filled/200/00e0ff/lock-2.png" alt="Quantum Security" style="max-width: 220px;">
             </div>
         </div>
@@ -112,19 +129,19 @@
 
     <!-- Secure Asset Form Section -->
     <section id="secure-assets" class="container py-5">
+        <h2 class="fw-bold mb-3" style="color:#00e0ff;">🛡️ Secure Your Asset or Project</h2>
+        <div class="alert alert-info" style="font-size:1rem;">
+            <b>How to use:</b><br>
+            1. Select the network you want to secure your asset on.<br>
+            2. Enter your wallet address, smart contract, or project name.<br>
+            3. Transfer the required amount to the displayed payment address.<br>
+            4. After payment, enter the transaction hash, click "I've Paid", then "Submit for Scan".<br>
+            5. You will see a confirmation message and your request will be processed.
+        </div>
         <div class="row justify-content-center">
             <div class="col-lg-7">
                 <div class="card shadow-lg border-info bg-dark text-light">
                     <div class="card-body">
-                        <h2 class="fw-bold mb-3" style="color:#00e0ff;">🛡️ Secure Your Asset or Project</h2>
-                        <div class="alert alert-info" style="font-size:1rem;">
-                            <b>How to use:</b><br>
-                            1. Select the network you want to secure your asset on.<br>
-                            2. Enter your wallet address, smart contract, or project name.<br>
-                            3. Transfer the required amount to the displayed payment address.<br>
-                            4. After payment, enter the transaction hash, click "I've Paid", then "Submit for Scan".<br>
-                            5. You will see a confirmation message and your request will be processed.
-                        </div>
                         <form id="supabase-form" autocomplete="off" class="mb-3">
                             <div class="mb-3">
                                 <label class="form-label">Network</label>
@@ -160,6 +177,7 @@
                             </div>
                         </form>
                         <div id="secure-result" class="mt-2"></div>
+                        <canvas id="secureChart" height="180"></canvas>
                     </div>
                 </div>
             </div>
@@ -168,18 +186,18 @@
 
     <!-- Results & Analytics Section -->
     <section id="results" class="container py-5">
+        <h2 class="fw-bold mb-3" style="color:#00e0ff;">📈 Results & Analytics</h2>
+        <div class="alert alert-info" style="font-size:1rem;">
+            <b>How to use:</b> After submitting your data and payment, your request status and scan results will appear here when available.
+        </div>
         <div class="row justify-content-center">
             <div class="col-lg-7">
                 <div class="card shadow border-info bg-dark text-light">
                     <div class="card-body">
-                        <h2 class="fw-bold mb-3" style="color:#00e0ff;">📈 Results & Analytics</h2>
-                        <div class="alert alert-info" style="font-size:1rem;">
-                            <b>How to use:</b> After submitting your data and payment, your request status and scan results will appear here when available.
-                        </div>
                         <div id="results-info" class="mb-4">
                             <p>Enter your asset or project above to see quantum risk analysis and protection status.</p>
                         </div>
-                        <canvas id="riskChart" width="320" height="320"></canvas>
+                        <canvas id="riskChart" height="220"></canvas>
                     </div>
                 </div>
             </div>
@@ -188,26 +206,23 @@
 
     <!-- Referral Campaign Section -->
     <section id="referrals" class="container py-5">
+        <h2 class="fw-bold mb-3" style="color:#00e0ff;">🎯 Referral Campaign</h2>
+        <div class="alert alert-info" style="font-size:1rem;">
+            <b>How to use:</b> Share QuantumSafe on Twitter using the buttons below and earn points for $QSAFE rewards.
+        </div>
         <div class="row justify-content-center">
             <div class="col-lg-7">
                 <div class="card shadow border-info bg-dark text-light">
                     <div class="card-body text-center">
-                        <h2 class="fw-bold mb-3" style="color:#00e0ff;">🎯 Referral Campaign</h2>
-                        <div class="alert alert-info" style="font-size:1rem;">
-                            <b>How to use:</b> Share QuantumSafe on Twitter using the buttons below and earn points for $QSAFE rewards.
-                        </div>
                         <div class="d-flex flex-wrap justify-content-center gap-3">
                             <button class="btn btn-outline-info tweet-btn" data-tweet="Just discovered @QuantumSafeAi — a project securing crypto from quantum attacks. Join the airdrop! #QuantumSafe #Crypto">Tweet #1</button>
                             <button class="btn btn-outline-info tweet-btn" data-tweet="Imagine your Bitcoin is exposed to quantum hacks. @QuantumSafeAi is the answer. $QSAFE incoming!">Tweet #2</button>
                             <button class="btn btn-outline-info tweet-btn" data-tweet="🔐 Post-quantum crypto security is no longer optional. I'm in with @QuantumSafeAi – join now.">Tweet #3</button>
                             <button class="btn btn-outline-info tweet-btn" data-tweet="🚨 Quantum threats are real. @QuantumSafeAi protects your smart contracts from the future.">Tweet #4</button>
                             <button class="btn btn-outline-info tweet-btn" data-tweet="I'm earning $QSAFE just for sharing this. Get in before the presale ends. #Airdrop #QuantumSafe">Tweet #5</button>
-                            <button class="btn btn-outline-info tweet-btn" data-tweet="Can your wallet survive a quantum attack? Secure it with @QuantumSafeAi today.">Tweet #6</button>
-                            <button class="btn btn-outline-info tweet-btn" data-tweet="Smart projects are adopting post-quantum security. Follow @QuantumSafeAi & stay safe.">Tweet #7</button>
-                            <button class="btn btn-outline-info tweet-btn" data-tweet="🧠 $QSAFE is more than a token – it's a protection protocol. Get your airdrop now.">Tweet #8</button>
-                            <button class="btn btn-outline-info tweet-btn" data-tweet="🔐 One click and you help decentralize quantum security. Follow @QuantumSafeAi">Tweet #9</button>
-                            <button class="btn btn-outline-info tweet-btn" data-tweet="Decentralized + Quantum-Safe = Future. I'm backing @QuantumSafeAi — You?">Tweet #10</button>
                         </div>
+                        <div id="tweet-history" class="mt-4"></div>
+                        <canvas id="referralChart" height="180"></canvas>
                     </div>
                 </div>
             </div>
@@ -221,7 +236,7 @@
             <div class="col-lg-7">
                 <div class="card shadow border-info bg-dark text-light">
                     <div class="card-body">
-                        <canvas id="tokenomicsChart" width="320" height="320"></canvas>
+                        <canvas id="tokenomicsChart" height="220"></canvas>
                         <ul class="list-group list-group-flush mt-4">
                             <li class="list-group-item bg-transparent text-light border-0">Community Rewards – 20%</li>
                             <li class="list-group-item bg-transparent text-light border-0">Team – 8%</li>
@@ -238,32 +253,40 @@
         </div>
     </section>
 
-    <!-- Roadmap Section -->
-    <section id="roadmap" class="container py-5">
-        <h2 class="fw-bold text-center mb-4" style="color:#00e0ff;">🗺️ Roadmap</h2>
-        <div class="timeline">
-            <div class="timeline-item"><span class="timeline-dot"></span><b>Q2 2025:</b> Research, tokenomics design, website launch</div>
-            <div class="timeline-item"><span class="timeline-dot"></span><b>Q3 2025:</b> Quantum risk scanner MVP, referral campaign</div>
-            <div class="timeline-item"><span class="timeline-dot"></span><b>Q4 2025:</b> Token launch (QSAFE), liquidity & airdrop</div>
-            <div class="timeline-item"><span class="timeline-dot"></span><b>Q1 2026:</b> Full dashboard, developer grants, integrations</div>
-            <div class="timeline-item"><span class="timeline-dot"></span><b>Q2 2026:</b> Governance, DAO voting, advanced tooling</div>
+    <!-- DEX & Market Data Section -->
+    <section id="market" class="container py-5">
+        <h2 class="fw-bold text-center mb-4" style="color:#00e0ff;">💹 Live Market Data & DEX Integration</h2>
+        <div class="alert alert-info" style="font-size:1rem;">
+            <b>How to use:</b> View live token prices and trade directly via DEX integration.
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card shadow border-info bg-dark text-light">
+                    <div class="card-body text-center">
+                        <div id="market-data" class="mb-3"></div>
+                        <!-- Example DEX widget (replace with real widget as needed) -->
+                        <iframe src="https://app.uniswap.org/#/swap?outputCurrency=ETH" height="400" width="100%" style="border:0;"></iframe>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Subscribe Section -->
     <section id="subscribe" class="container py-5">
+        <h2 class="fw-bold mb-3" style="color:#00e0ff;">📬 Stay Updated</h2>
+        <div class="alert alert-info" style="font-size:1rem;">
+            <b>How to use:</b> Enter your email to receive all updates and exclusive offers from QuantumSafe.
+        </div>
         <div class="row justify-content-center">
             <div class="col-lg-6">
                 <div class="card shadow border-info bg-dark text-light">
                     <div class="card-body text-center">
-                        <h2 class="fw-bold mb-3" style="color:#00e0ff;">📬 Stay Updated</h2>
-                        <div class="alert alert-info" style="font-size:1rem;">
-                            <b>How to use:</b> Enter your email to receive all updates and exclusive offers from QuantumSafe.
-                        </div>
-                        <form>
-                            <input type="email" class="form-control mb-3" placeholder="Enter your email" required>
+                        <form id="subscribe-form">
+                            <input type="email" id="subscribe-email" class="form-control mb-3" placeholder="Enter your email" required>
                             <button type="submit" class="btn btn-info fw-bold px-4">Subscribe</button>
                         </form>
+                        <div id="subscribe-result" class="mt-2"></div>
                     </div>
                 </div>
             </div>
@@ -274,6 +297,16 @@
     <footer class="text-center py-4" style="background:#181818;">
         <p class="mb-0">© 2025 QuantumSafe Protocol. All rights reserved. | <a href="https://twitter.com/QuantumSafeAi" target="_blank" style="color:#00e0ff;">@QuantumSafeAi</a></p>
     </footer>
+
+    <!-- Toast notification -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+      <div id="main-toast" class="toast align-items-center text-bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body" id="toast-body"></div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    </div>
 
     <!-- Scripts -->
     <script src="js/Js/config.js"></script>
