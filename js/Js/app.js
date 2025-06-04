@@ -116,10 +116,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Save user info in Supabase (optional)
         await supabase.from('referral_users').upsert([
             { twitter: twitter, wallet: wallet, network: network }
         ]);
 
+        // Generate unique referral link
         const refId = encodeURIComponent(`${twitter}_${wallet}_${network}`);
         const link = `${window.location.origin}/?ref=${refId}`;
         if (referralLinkDiv) {
@@ -130,10 +132,25 @@ document.addEventListener('DOMContentLoaded', function() {
         showProfileOrStats();
     }
 
-    // Add event for referral link generation (assume button with id="generate-referral")
+    // Add event for referral link generation
     const generateReferralBtn = document.getElementById('generate-referral');
     if (generateReferralBtn) {
         generateReferralBtn.onclick = generateReferralLink;
+    }
+
+    // Show/hide profile connect or stats
+    function showProfileOrStats() {
+        const userRef = localStorage.getItem('user_ref');
+        const rewardStats = document.getElementById('reward-stats');
+        const profileConnect = document.querySelector('.dropdown');
+        if (userRef && !userRef.startsWith('guest_')) {
+            if (rewardStats) rewardStats.style.display = '';
+            if (profileConnect) profileConnect.style.display = 'none';
+            updateRewardStats();
+        } else {
+            if (rewardStats) rewardStats.style.display = 'none';
+            if (profileConnect) profileConnect.style.display = '';
+        }
     }
 
     // Helper: Get or set user referral id (localStorage)
@@ -207,7 +224,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Results chart
     let riskChart;
     window.renderRiskChart = function(data, labels) {
-        const ctx = document.getElementById('riskChart').getContext('2d');
+        const ctx = document.getElementById('riskChart')?.getContext('2d');
+        if (!ctx) return;
         if (riskChart) riskChart.destroy();
         riskChart = new Chart(ctx, {
             type: 'pie',
@@ -257,7 +275,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Update reward stats on page load
-    updateRewardStats();
+    // Show correct section on load
     showProfileOrStats();
 });
